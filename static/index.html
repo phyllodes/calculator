@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+        body {
+            font-family: 'Inria Sans', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            justify-content: center; /* Center content horizontally */
+            align-items: flex-start; /* Align items to the top */
+            height: 100vh; /* Full viewport height */
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 0px;
+            background-color: none;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .header h2 {
+            margin: 0;
+            padding-right: 20px;
+        }
+        .header button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .header button:hover {
+            background-color: #333;
+        }
+        .content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 2000px;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .section {
+            width: 48%;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            background-color: none;
+            margin-top: 30px;
+            padding: 0px;
+            position: relative;
+        }
+        .input-box {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+        }
+        .input-box label {
+            margin-right: 10px;
+            flex: none;
+            white-space: nowrap;
+        }
+        .input-box input, .input-box select {
+            width: 80px;
+            padding: 5px;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            margin-right: 5px;
+            flex: none;
+        }
+        .input-box input:focus, .input-box select:focus {
+            outline: none;
+            border-bottom-color: #aaa;
+        }
+        .input-box span {
+            flex: none;
+            white-space: nowrap;
+        }
+        hr {
+            border: 1px solid #5F5A5A;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .total-box {
+            background-color: #d9d9d9;
+            padding: 10px 30px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #5F5A5A;
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .result-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 15px 10px 15px;
+            margin-bottom: 0px;
+            background-color: #D9D9D9; /* Grey background */
+            border-radius: 10px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .result-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 3px;
+            margin-top: 3px;
+        }
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+        .result-box:last-child {
+            border-bottom: none;
+        }
+        .result-value {
+            font-weight: bold;
+            font-size: 14px;
+            color: #5F5A5A;
+            margin-right: 5px;
+        }
+        .result-unit {
+            font-weight: bold;
+            font-size: 14px;
+            color: #5F5A5A;
+        }
+        .result-label {
+            flex-grow: 1;
+            margin-right: 10px;
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 14px;
+            color: #5F5A5A;
+        }
+        .result-box .line {
+            display: none;
+        }
+        .dash-line {
+            width: 100%;
+            border-top: 1px dashed grey;
+            margin: 10px 0;
+        }
+        .result-table {
+            width: 100%;
+            background-color: transparent;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #5F5A5A;
+            background-color: #fff;
+            border-radius: 10px;
+            margin-bottom: 10px;  /* Ensure space between rows */
+            text-align: center;
+        }
+        .result-header {
+            background-color: #d9d9d9;
+            font-weight: bold;
+        }
+        .result-cell {
+            flex: 1;
+            text-align: center;
+        }
+        .result-cell:first-child {
+            text-align: center;
+        }
+        .result-cell:last-child {
+            text-align: center;
+        }
+        .span-3 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 5px 0;
+        }
+        .span-3 > div {
+            margin: 5px 0;
+        }
+        .total-table {
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            border-radius: 10px;
+            border-collapse: collapse;
+            overflow: hidden;
+            background-color: #fff;
+        }
+        .total-table td {
+            font-weight: bold;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
+            width: 50%;
+            background-color: #fff;
+            color: #5F5A5A;
+        }
+        .total-table td:first-child {
+            background-color: #f2f2f2;
+        }
+        .status-box {
+            width: 100%;
+            height: 50px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 50px;
+            color: white;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+        .tabs-container {
+            display: flex;
+            align-items: center;
+            margin-left: 0px;
+            margin-right: -10px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+        }
+        .tabs {
+            display: flex;
+            background-color: lightgrey;
+            border-radius: 25px;
+            overflow: hidden;
+        }
+        .tab {
+            flex: 1;
+            padding-top: 7px;
+            padding-bottom: 7px;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: #5F5A5A;
+            font-size: 12px;
+            font-weight: bold;
+            min-width: 90px;
+            position: relative;
+            z-index: 2;
+        }
+        .tab.active {
+            background-color: black;
+            color: white;
+            border-radius: 25 px;
+            position: relative;
+            z-index: 3;
+        }
+        .title-tabs-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+        }
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 18px;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            flex-shrink: 0;
+        }
+        .description {
+            font-size: 12px;
+            color: grey;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .parameter-box {
+            background-color: #D9D9D9;
+            border-radius: 10px;
+            padding: 12px;
+            padding-top: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            width: calc(50% - 10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .parameter-box label {
+            font-weight: bold;
+            font-size: 12px;
+            color: #5F5A5A;
+            padding-bottom: 10px;
+        }
+
+        .input-field {
+            display: flex;
+            align-items: center;
+            font-size: 1.5em;
+            margin: 10px 0;
+        }
+
+        .input-box input {
+            border: none;
+            background: none;
+            font-size: 1.5em;
+            text-align: left;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .input-box input:focus {
+            outline: none;
+        }
+
+        .input-box input::-webkit-inner-spin-button,
+        .input-box input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .unit {
+            font-size: 1.5em;
+            margin-left: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 10px;
+        }
+
+        .percentage {
+            color: grey;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+
+        .percentage.increase {
+            color: green;
+            font-weight: bold;
+        }
+
+        .percentage.decrease {
+            color: red;
+            font-weight: bold;
+        }
+
+        .percentage.equal {
+            color: #BB9A28;
+            font-weight: bold;
+        }
+
+        .initial-value {
+            font-size: 0.8em;
+            color: grey;
+        }
+
+        .parameter-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .percentage-and-initial {
+            display: flex;
+            align-items: center;
+        }
+
+        .variant-table-container {
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        .variant-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .variant-table td {
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #5F5A5A;
+        }
+
+        .variant-table th {
+            background-color: #d9d9d9;
+            color: #5F5A5A;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .variant-group {
+            display: grid;
+            grid-template-columns: 10% 30% 30% 30%;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .variant-group:nth-child(even) {
+            background-color: #e0e0e0;
+        }
+
+        .variant-group:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .variant-group:hover {
+            background-color: #b0b0b0;
+        }
+
+        .variant-selector-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px; /* Adjust as needed */
+        }
+
+        .variant-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selector-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #5F5A5A;
+            margin-right: 10px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .selector-box.selected {
+            background-color: #5F5A5A;
+        }
+
+        .selector-box.selected::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .variant-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .variant-main {
+            color: #5F5A5A;
+        }
+
+        .variant-sub {
+            color: #5F5A5A;
+        }
+
+        .variant-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .variant-header-container {
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .variant-rows-container {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+        }
+        .right-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .progress-bar-label {
+            font-weight: bold;
+            font-size: 12px;
+            color: #5F5A5A;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            position: relative;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .progress-value {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            font-size: 14px;
+            color: #5F5A5A;
+        }
+
+        .progress-bar-scale {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar-scale span {
+            font-size: 12px;
+            color: grey;
+        }
+
+        .progress-bar-scale span:nth-child(2) {
+            position: absolute;
+            left: 50%; /* Default position, will be updated dynamically */
+            transform: translateX(-50%);
+            display: none;
+        }
+
+        .green-progress + .progress-bar-scale span:nth-child(2) {
+            display: inline;
+        }
+
+        .red-progress + .progress-bar-scale span:nth-child(2) {
+            display: none;
+        }
+
+        .red-progress {
+            background-color: red;
+        }
+
+        .green-progress {
+            background-color: lightgreen;
+        }
+        .results-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-left: 20px; /* Adjust as necessary for spacing */
+        }
+        .dashed-line {
+            border-top: 2px dashed grey;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Калькулятор</h2>
+        <div class="total-box">
+            Итого, руб: <span id="total_COST"></span>
+        </div>
+        <button onclick="calculate()">Посчитать</button>
+    </div>
+    <hr>
+    <div class="content">
+        <div class="section">
+            <!-- Title and Tabs Container -->
+            <div class="title-tabs-container">
+                <div class="title-container">
+                    <b class="title">Входные параметры</b>
+                    <p class="description" id="tab-description">Введите основные данные.</p>
+                </div>
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" onclick="showTabContent('main')">Основные</div>
+                        <div class="tab" onclick="showTabContent('vv')">Варианты ВВ</div>
+                        <div class="tab" onclick="showTabContent('costs')">Стоимости</div>
+                        <div class="tab" onclick="showTabContent('salaries')">Зарплаты</div>
+                    </div>
+                </div>
+            </div>
+            <div id="main-content">
+                <div id="main" class="tab-content active">
+                    <div class="parameter-row">
+                        <div class="parameter-box">
+                            <label for="d">Диаметр скважины, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="d" name="d" value="0.155" required oninput="updatePercentage('d', 0.155)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                                <div id="percentage-d" class="percentage equal">= 0%</div>
+                                <div class="initial-value">Значение по проекту: 0.155</div>
+                            </div>
+                        </div>
+                        <div class="parameter-box">
+                            <label for="V">Объем взрываемого блока породы, м<sup>3</sup></label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="V" name="V" value="25000" required oninput="updatePercentage('V', 25000)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-V" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 25000</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="parameter-row">
+                        <div class="parameter-box">
+                            <label for="a">Расстояние между зарядами в ряду, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="a" name="a" value="4" required oninput="updatePercentage('a', 4)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-a" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 4</div>
+                            </div>
+                        </div>
+                        <div class="parameter-box">
+                            <label for="b">Расстояние между рядами, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="b" name="b" value="5" required oninput="updatePercentage('b', 5)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-b" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 5</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="parameter-row">
+                        <div class="parameter-box">
+                            <label for="gamma">Плотность породы, г/м<sup>3</sup></label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="gamma" name="gamma" value="2.73" required oninput="updatePercentage('gamma', 2.73)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-gamma" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 2.73</div>
+                            </div>
+                        </div>
+                        <div class="parameter-box">
+                            <label for="H">Высота уступа, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="H" name="H" value="12" required oninput="updatePercentage('H', 12)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-H" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 12</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="parameter-row">
+                        <div class="parameter-box">
+                            <label for="l_per">Глубина перебура, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="l_per" name="l_per" value="1.5" required oninput="updatePercentage('l_per', 1.5)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-l_per" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 1.5</div>
+                            </div>
+                        </div>
+                        <div class="parameter-box">
+                            <label for="l_zab">Длина забойки, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="l_zab" name="l_zab" value="3" required oninput="updatePercentage('l_zab', 3)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-l_zab" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 3</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="parameter-row">
+                        <div class="parameter-box">
+                            <label for="del">Плотность заряжания ВВ, кг/м<sup>3</sup></label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="del" name="del" value="1200" required oninput="updatePercentage('del', 1200)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-del" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 1200</div>
+                            </div>
+                        </div>
+                        <div class="parameter-box">
+                            <label for="size">Допустимый размер крупных кусков, м</label>
+                            <div class="input-container">
+                                <div class="input-box">
+                                    <input type="number" id="size" name="size" value="1" required oninput="updatePercentage('size', 1)">
+                                </div>
+                            </div>
+                            <div class="percentage-and-initial">
+                            <div id="percentage-size" class="percentage equal">= 0%</div>
+                            <div class="initial-value">Значение по проекту: 1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div id="vv" class="tab-content">
+                        <div class="variant-table-container">
+                            <div class="variant-header-container">
+                                <table class="variant-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;"></th>
+                                            <th style="width: 30%;">Заряд</th>
+                                            <th style="width: 30%;">Патрон</th>
+                                            <th style="width: 30%;">Волновод</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="variant-rows-container">
+                                <table class="variant-table">
+                                    <tbody>
+                                        <tr class="variant-group" data-variant="1" onclick="selectVariant(1)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-1"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Граммонит 79/21</div>
+                                                <div class="variant-sub">Гранулотол</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="2" onclick="selectVariant(2)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-2"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Граммонит 79/21</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="3" onclick="selectVariant(3)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-3"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Сибирит-1200</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="4" onclick="selectVariant(4)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-4"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Нитронит Э-100</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="5" onclick="selectVariant(5)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-5"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Сибирит-1200</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="6" onclick="selectVariant(6)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-6"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Нитронит Э-100</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="7" onclick="selectVariant(7)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-7"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Сибирит-1200</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="8" onclick="selectVariant(8)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-8"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Нитронит Э-100</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Нитронит П 60 мм</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="variant-group" data-variant="9" onclick="selectVariant(9)">
+                                            <td class="variant-selector-cell">
+                                                <div class="variant-selector">
+                                                    <div class="selector-box" id="selector-9"></div>
+                                                </div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="variant-main">Сибирит-1200</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Сибирит ПМ 60-0,5</div>
+                                                <div class="nowrap">Сибирит ПМ 60-0,5</div>
+                                            </td>
+                                            <td style="width: 30%;">
+                                                <div class="nowrap">Искра С 500/16</div>
+                                                <div class="nowrap">Искра С 500/10</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="costs" class="tab-content">
+                        <div class="parameter-row">
+                            <div class="parameter-box">
+                                <label for="cost1">Граммонит 79/21</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost1" name="cost1" value="77.12" required oninput="updatePercentage('cost1', 77.12)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost1" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 77.12</div>
+                                </div>
+                            </div>
+                            <div class="parameter-box">
+                                <label for="cost2">Гранулотол</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost2" name="cost2" value="165.95" required oninput="updatePercentage('cost2', 165.95)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost2" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 165.95</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="parameter-row">
+                            <div class="parameter-box">
+                                <label for="cost3">Сибирит-1200</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost3" name="cost3" value="77" required oninput="updatePercentage('cost3', 77)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost3" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 77</div>
+                                </div>
+                            </div>
+                            <div class="parameter-box">
+                                <label for="cost4">Нитронит Э-100</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost4" name="cost4" value="67" required oninput="updatePercentage('cost4', 67)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost4" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 67</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="parameter-row">
+                            <div class="parameter-box">
+                                <label for="cost5">Нитронит П 60 мм</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost5" name="cost5" value="106.14" required oninput="updatePercentage('cost5', 106.14)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost5" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 106.14</div>
+                                </div>
+                            </div>
+                            <div class="parameter-box">
+                                <label for="cost6">Сибирит ПМ 60-0,5</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost6" name="cost6" value="120" required oninput="updatePercentage('cost6', 120)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost6" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 120</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="parameter-row">
+                            <div class="parameter-box">
+                                <label for="cost7">Искра С 500/16</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost7" name="cost7" value="325.33" required oninput="updatePercentage('cost7', 325.33)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost7" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 325.33</div>
+                                </div>
+                            </div>
+                            <div class="parameter-box">
+                                <label for="cost8">Искра С 500/10</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="cost8" name="cost8" value="261.33" required oninput="updatePercentage('cost8', 261.33)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-cost8" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Стоимость по проекту: 261.33</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="salaries" class="tab-content">
+                        <div class="parameter-row">
+                            <div class="parameter-box">
+                                <label for="zp_sr_vzriv">Взрывник</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="zp_sr_vzriv" name="zp_sr_vzriv" value="75400" required oninput="updatePercentage('zp_sr_vzriv', 75400)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-zp_sr_vzriv" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Текущая среднемесячная зарплата: 75400</div>
+                                </div>
+                            </div>
+                            <div class="parameter-box">
+                                <label for="zp_sr_gor">Горный мастер</label>
+                                <div class="input-container">
+                                    <div class="input-box">
+                                        <input type="number" id="zp_sr_gor" name="zp_sr_gor" value="63210" required oninput="updatePercentage('zp_sr_gor', 63210)">
+                                    </div>
+                                </div>
+                                <div class="percentage-and-initial">
+                                    <div id="percentage-zp_sr_gor" class="percentage equal">= 0%</div>
+                                    <div class="initial-value">Текущая среднемесячная зарплата: 63210</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <input type="hidden" id="variant" name="variant" value="1">
+                </div>
+            </div>
+        <div class="section">
+                <div class="title-container">
+                    <b class="title">Результаты</b>
+                    <p class="description" id="results-description">Результаты расчета.</p>
+                </div>
+            <div class="main-container">
+                <div class="results-container">
+                    <div class="left-section">
+                        <div class="result-box">
+                            <div class="result-item">
+                                <label class="result-label">Кол-во взрываемых скважин:</label>
+                                <div class="result-value"><span id="n"></span></div>
+                                <span class="result-unit" id="n-unit">шт.</span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Кол-во буро-метров:</label>
+                                <div class="result-value"><span id="l_byr"></span></div>
+                                <span class="result-unit" id="l_byr-unit">п.м.</span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Длина заряда:</label>
+                                <div class="result-value"><span id="l_zar"></span></div>
+                                <span class="result-unit" id="l_zar-unit">м</span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Вместимость скважины:</label>
+                                <div class="result-value"><span id="P"></span></div>
+                                <span class="result-unit" id="P-unit">кг/м</span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Масса заряда в скважине:</label>
+                                <div class="result-value"><span id="Q_z"></span></div>
+                                <span class="result-unit" id="Q_z-unit">кг</span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Удельный расход ВВ:</label>
+                                <div class="result-value"><span id="q_p"></span></div>
+                                <span class="result-unit" id="q_p-unit">кг/м<sup>3</sup></span>
+                            </div>
+                            <div class="dash-line"></div>
+                            <div class="result-item">
+                                <label class="result-label">Общий расход ВВ:</label>
+                                <div class="result-value"><span id="Q_all"></span></div>
+                                <span class="result-unit" id="Q_all-unit">кг</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-section">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">Расстояние, опасное для людей по разлету отдельных кусков породы, м</div>
+                            <div class="progress-bar">
+                                <div class="progress-value" id="proverka_1_value" style="display:none;"></div>
+                                <div class="progress" id="proverka_1_progress"></div>
+                            </div>
+                            <div class="progress-bar-scale">
+                                <span>0</span>
+                                <span id="proverka_1_actual"></span>
+                                <span>2000</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">Сейсмически безопасное расстояние по методике ФНиП от места взрыва до охраняемого здания, м</div>
+                            <div class="progress-bar">
+                                <div class="progress-value" id="proverka_3_value" style="display:none;"></div>
+                                <div class="progress" id="proverka_3_progress"></div>
+                            </div>
+                            <div class="progress-bar-scale">
+                                <span>0</span>
+                                <span id="proverka_3_actual"></span>
+                                <span>2000</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">Наибольшое безопасное расстояние по сейсмическому воздействию, м</div>
+                            <div class="progress-bar">
+                                <div class="progress-value" id="proverka_4_value" style="display:none;"></div>
+                                <div class="progress" id="proverka_4_progress"></div>
+                            </div>
+                            <div class="progress-bar-scale">
+                                <span>0</span>
+                                <span id="proverka_4_actual"></span>
+                                <span>2000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="dashed-line"></div>
+                <div class="result-table">
+                <div class="result-row result-header">
+                    <div class="result-cell">Статьи затрат</div>
+                    <div class="result-cell">Подпункты</div>
+                    <div class="result-cell">Стоимость, руб</div>
+                    <div class="result-cell">Общая стоимость, руб</div>
+                </div>
+                <div class="result-row">
+                    <div class="result-cell span-3">
+                        <div>ВВ</div>
+                    </div>
+                    <div class="result-cell span-3">
+                        <div>Заряд</div>
+                        <div>Патрон</div>
+                        <div>Волновод + ЭД</div>
+                    </div>
+                    <div class="result-cell span-3">
+                        <div><span id="ZAR_COST"></span></div>
+                        <div><span id="PATRON_COST"></span></div>
+                       <div><span id="VOLNOVOD_COST"></span></div>
+                    </div>
+                    <div class="result-cell" rowspan="3"><span id="VV_total"></span></div>
+                </div>
+                <div class="result-row">
+                    <div class="result-cell">Буровые работы</div>
+                    <div class="result-cell">-</div>
+                    <div class="result-cell"><span id="BYR_COST"></span></div>
+                    <div class="result-cell"><span id="BYR_COST_total"></span></div>
+                </div>
+                <div class="result-row">
+                    <div class="result-cell">Зарплата</div>
+                    <div class="result-cell">-</div>
+                    <div class="result-cell"><span id="ZP_COST"></span></div>
+                    <div class="result-cell"><span id="ZP_COST_total"></span></div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+        function updatePercentage(inputId, projectValue) {
+            const inputElement = document.getElementById(inputId);
+            const percentageElement = document.getElementById(`percentage-${inputId}`);
+            const userValue = parseFloat(inputElement.value);
+
+            if (isNaN(userValue)) {
+                percentageElement.textContent = '= 0%';
+                percentageElement.className = 'percentage equal';
+                return;
+            }
+
+            const difference = ((userValue - projectValue) / projectValue) * 100;
+            const roundedDifference = Math.round(difference);
+
+            if (difference > 0) {
+                percentageElement.textContent = `↑ ${roundedDifference}%`;
+                percentageElement.className = 'percentage increase';
+            } else if (difference < 0) {
+                percentageElement.textContent = `↓ ${Math.abs(roundedDifference)}%`;
+                percentageElement.className = 'percentage decrease';
+            } else {
+                percentageElement.textContent = '= 0%';
+                percentageElement.className = 'percentage equal';
+            }
+        }
+
+        // Initial call to set the percentage for default values
+        updatePercentage('d', 0.155);
+        updatePercentage('V', 25000);
+        updatePercentage('a', 4);
+        updatePercentage('b', 5);
+        updatePercentage('gamma', 2.73);
+        updatePercentage('H', 12);
+        updatePercentage('l_per', 1.5);
+        updatePercentage('l_zab', 3);
+
+        function selectVariant(variant) {
+            const rows = document.querySelectorAll('.variant-group');
+            rows.forEach(row => {
+                row.querySelector('.selector-box').classList.remove('selected');
+            });
+            document.getElementById(`selector-${variant}`).classList.add('selected');
+            document.getElementById('variant').value = variant; // Update hidden input value
+        }
+
+        function roundUpToNearest50(number) {
+            return Math.ceil(number / 50) * 50;
+        }
+
+        function showTabContent(tab) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Show the selected tab content
+            document.getElementById(tab).classList.add('active');
+
+            // Update tab description
+            let description = '';
+            switch (tab) {
+                case 'main':
+                    description = 'Введите основные данные.';
+                    break;
+                case 'vv':
+                    description = 'Выберите вариант ВВ.';
+                    break;
+                case 'costs':
+                    description = 'Введите данные для стоимостей.';
+                    break;
+                case 'salaries':
+                    description = 'Введите данные для зарплат.';
+                    break;
+            }
+            document.getElementById('tab-description').innerText = description;
+
+            // Update active tab
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tabElement => tabElement.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function updateProgressBar(progressBarId, valueId, actualId, value, maxValue) {
+            const progressBar = document.getElementById(progressBarId);
+            const valueElement = document.getElementById(valueId);
+            const actualElement = document.getElementById(actualId);
+            const roundedValue = Math.round(value);
+            const percentage = Math.min((roundedValue / maxValue) * 100, 100);
+
+            progressBar.style.width = `${percentage}%`;
+
+            if (value > maxValue || value < 300 || value > 1700) {
+                progressBar.classList.add('red-progress');
+                progressBar.classList.remove('green-progress');
+                valueElement.style.display = 'none';
+                actualElement.style.display = 'none';
+            } else {
+                progressBar.classList.add('green-progress');
+                progressBar.classList.remove('red-progress');
+                if (value > 300 && value < 1700) {
+                    valueElement.innerText = roundedValue;
+                    valueElement.style.display = 'block';
+                    valueElement.style.left = `${percentage}%`;
+
+                    actualElement.innerText = roundedValue;
+                    actualElement.style.left = `${percentage}%`;
+                    actualElement.style.display = 'inline';
+                } else {
+                    valueElement.style.display = 'none';
+                    actualElement.style.display = 'none';
+                }
+            }
+        }
+
+        async function calculate() {
+            const inputs = {};
+            const formElements = document.querySelectorAll('input[type="number"], input[type="hidden"]');
+            formElements.forEach((item) => {
+                inputs[item.name] = parseFloat(item.value);
+            });
+
+            console.log("Inputs:", inputs);
+
+            const zar_values = [
+                inputs.cost1, // Граммонит 79/21
+                inputs.cost1, // Граммонит 79/21
+                inputs.cost3, // Сибирит-1200
+                inputs.cost4, // Нитронит Э-100
+                inputs.cost3, // Сибирит-1200
+                inputs.cost4, // Нитронит Э-100
+                inputs.cost3, // Сибирит-1200
+                inputs.cost4, // Нитронит Э-100
+                inputs.cost3  // Сибирит-1200
+            ];
+
+            const patron_values = [
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost5, // Нитронит П 60 мм
+                inputs.cost6  // Сибирит ПМ 60-0,5
+            ];
+
+            const volnovod_values_1 = [
+                inputs.cost7, // Искра С 500/16
+                inputs.cost7, // Искра С 500/16
+                inputs.cost7, // Искра С 500/16
+                inputs.cost7, // Искра С 500/16
+                inputs.cost7, // Искра С 500/16
+                inputs.cost7, // Искра С 500/16
+                inputs.cost8, // Искра С 500/10
+                inputs.cost8, // Искра С 500/10
+                inputs.cost7  // Искра С 500/16
+            ];
+
+            const volnovod_values_2 = [
+                inputs.cost8, // Искра С 500/10
+                inputs.cost8, // Искра С 500/10
+                inputs.cost8, // Искра С 500/10
+                inputs.cost8, // Искра С 500/10
+                0,            // No value for this case
+                0,            // No value for this case
+                0,            // No value for this case
+                0,            // No value for this case
+                inputs.cost8  // Искра С 500/10
+            ];
+
+            console.log("zar_values:", zar_values);
+            console.log("patron_values:", patron_values);
+            console.log("volnovod_values_1:", volnovod_values_1);
+            console.log("volnovod_values_2:", volnovod_values_2);
+
+            inputs.zar_values = zar_values;
+            inputs.patron_values = patron_values;
+            inputs.volnovod_values_1 = volnovod_values_1;
+            inputs.volnovod_values_2 = volnovod_values_2;
+
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(inputs)
+            });
+
+            const data = await response.json();
+
+            console.log("Response Data:", data);
+
+            function updateElement(id, value, unitId = null) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerText = value;
+                }
+                if (unitId) {
+                    const unitElement = document.getElementById(unitId);
+                    if (unitElement) {
+                        unitElement.style.display = 'inline';
+                    }
+                }
+            }
+
+            updateElement('n', data.n, 'n-unit');
+            updateElement('l_byr', data.l_byr, 'l_byr-unit');
+            updateElement('l_zar', data.l_zar, 'l_zar-unit');
+            updateElement('P', data.P, 'P-unit');
+            updateElement('Q_z', data.Q_z, 'Q_z-unit');
+            updateElement('q_p', data.q_p, 'q_p-unit');
+            updateElement('Q_all', data.Q_all, 'Q_all-unit');
+            updateElement('ZAR_COST', parseFloat(data.ZAR_COST).toFixed(2));
+            updateElement('PATRON_COST', parseFloat(data.PATRON_COST).toFixed(2));
+            updateElement('VOLNOVOD_COST', parseFloat(data.VOLNOVOD_COST).toFixed(2));
+            updateElement('VV_total', parseFloat(data.VV_total).toFixed(2));
+            updateElement('BYR_COST', parseFloat(data.BYR_COST).toFixed(2));
+            updateElement('BYR_COST_total', parseFloat(data.BYR_COST).toFixed(2));
+            updateElement('ZP_COST', parseFloat(data.ZP_COST).toFixed(2));
+            updateElement('ZP_COST_total', parseFloat(data.ZP_COST).toFixed(2));
+            updateElement('total_COST', parseFloat(data.total_COST).toFixed(2));
+
+            updateElement('r_c_dop', data.r_c_dop);
+            updateElement('proverka_1', roundUpToNearest50(parseFloat(data.proverka_1)).toFixed(0));
+            updateElement('proverka_3', parseFloat(data.proverka_3).toFixed(1));
+            updateElement('proverka_4', roundUpToNearest50(parseFloat(data.proverka_4)).toFixed(0));
+
+            // Parsing and logging values for debugging
+            const proverka1 = parseFloat(data.proverka_1);
+            const proverka3 = parseFloat(data.proverka_3);
+            const proverka4 = parseFloat(data.proverka_4);
+            const rc_dop = parseFloat(data.r_c_dop);
+
+            console.log('proverka_1:', proverka1);
+            console.log('proverka_3:', proverka3);
+            console.log('proverka_4:', proverka4);
+            console.log('r_c_dop:', rc_dop);
+
+            const statusBox = document.getElementById('status-box');
+            if (statusBox) {
+                if (proverka1 > rc_dop || proverka3 > rc_dop || proverka4 > rc_dop) {
+                    statusBox.style.backgroundColor = 'red';
+                    statusBox.innerText = 'Не безопасно';
+                    console.log('Status Box Updated to: Не безопасно');
+                } else {
+                    statusBox.style.backgroundColor = 'green';
+                    statusBox.innerText = 'Безопасно';
+                    console.log('Status Box Updated to: Безопасно');
+                }
+            }
+        updateProgressBar('proverka_1_progress', 'proverka_1_value', 'proverka_1_actual', proverka1, rc_dop);
+        updateProgressBar('proverka_3_progress', 'proverka_3_value', 'proverka_3_actual', proverka3, rc_dop);
+        updateProgressBar('proverka_4_progress', 'proverka_4_value', 'proverka_4_actual', proverka4, rc_dop);
+        }
+    </script>
+</body>
+</html>
